@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>stash-stats - duration</title>
+  <style>
+    body { background-color: #111; }
+    canvas { max-height: 95vh; }
+    a { color: #ddd; }
+    pre { text-align: center; color: #ddd; }
+  </style>
+  <meta name="theme-color" content="#111">
+</head>
+<body>
+  <canvas id="chart">Your browser does not support the canvas element.</canvas>
+  <script rel=preload src="https://cdn.jsdelivr.net/combine/npm/hammerjs@2,npm/chart.js@4"></script>
+  <script rel=preload src="https://cdn.jsdelivr.net/combine/npm/chartjs-plugin-zoom@2,npm/luxon@3,npm/chartjs-adapter-luxon@1"></script>
+  <script rel=preload src="assets/options.js"></script>
+  <script rel=preload src="assets/duration.js"></script>
+  <script>
+    fetch("/api/stats/duration")
+      .then(res => res.json())
+      .then(data => createChart(processChart(data)));
+  </script>
+</body>
