@@ -1,5 +1,5 @@
 import Database from 'better-sqlite3';
-const db = new Database('stash-timeseries.db');
+const db = new Database('db/stash-timeseries.db');
 db.pragma('journal_mode = WAL');
 
 export const close = () => db.close()
