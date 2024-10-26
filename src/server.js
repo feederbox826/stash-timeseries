@@ -99,7 +99,7 @@ async function startFastify(port = 9988) {
   await fastify.register(fastifyStatic, {
     root: path.join(import.meta.dirname, 'public'),
   })
-  await fastify.listen({ port })
+  await fastify.listen({ port, address: "0.0.0.0" })
 }
 startFastify()
 
