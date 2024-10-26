@@ -83,6 +83,10 @@ fastify.get("/api/stats/all", async (req, rep) => {
   const rows = db.queryAll();
   return rows
 })
+fastify.get("/api/update", async (req, rep) => {
+  update()
+  return { status: "ok" }
+})
 
 db.setup()
 update()
