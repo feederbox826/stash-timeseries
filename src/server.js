@@ -93,13 +93,13 @@ update()
 // run twice daily
 schedule("0 */12 * * *", update)
 
-async function startFastify(port = 9988) {
-  console.log(`Server running on http://localhost:${port}`);
+async function startFastify(port = 9988, address = "::") {
+  console.log(`Server running on http://${address}:${port}`);
   await fastify.register(cors)
   await fastify.register(fastifyStatic, {
     root: path.join(import.meta.dirname, 'public'),
   })
-  await fastify.listen({ port, address: "0.0.0.0" })
+  await fastify.listen({ port, address })
 }
 startFastify()
 
