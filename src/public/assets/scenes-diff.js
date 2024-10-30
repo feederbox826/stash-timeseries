@@ -7,13 +7,15 @@ function processChart(data) {
   const groups = []
   const GB = 1024 * 1024 * 1024
   const DAY = 24 * 60 * 60
-  data.sort((a, b) => a.timestamp - b.timestamp)
-    .forEach(val => {
-      count.push({ x: val.timestamp, y: val.count })
-      size.push({ x: val.timestamp, y: val.size/GB })
-      duration.push({ x: val.timestamp, y: val.duration/DAY })
-      groups.push({ x: val.timestamp, y: val.groups })
-    })
+  const sorted = data.sort((a, b) => a.timestamp - b.timestamp)
+  for (var i=1; i < sorted.length; i++) {
+    var val = sorted[i]
+    var prev = sorted[i-1]
+    count.push({ x: val.timestamp, y: val.count-prev.count })
+    size.push({ x: val.timestamp, y: (val.size-prev.size)/GB })
+    duration.push({ x: val.timestamp, y: (val.duration-prev.duration)/DAY })
+    groups.push({ x: val.timestamp, y: (val.groups-prev.groups) })
+  }
   return {
     count,
     size,
@@ -30,16 +32,16 @@ function createChart(data) {
     type: 'line',
     data: {
       datasets: [{
-        label: 'Scene count',
+        label: 'Scene count diff',
         data: data.count,
       }, {
-        label: `Scene size (GB)`,
+        label: `Scene size diff (GB)`,
         data: data.size,
       },{
-        label: `Total Duration (days)`,
+        label: `Total Duration diff (days)`,
         data: data.duration,
       }, {
-        label: 'Group count',
+        label: 'Group count diff',
         data: data.groups,
       }]
     },

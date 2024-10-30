@@ -32,8 +32,7 @@ const scales = {
     grid
   },
   y: {
-    type: 'logarithmic',
-    min: 1,
+    type: 'line',
     title: {
       display: true,
       color: light
