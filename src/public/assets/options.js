@@ -32,7 +32,7 @@ const scales = {
     grid
   },
   y: {
-    type: 'line',
+    type: 'linear',
     title: {
       display: true,
       color: light
