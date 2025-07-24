@@ -17,7 +17,8 @@
   <script rel=preload src="assets/options.js"></script>
   <script rel=preload src="assets/images.js"></script>
   <script>
-    fetch("/api/stats/images")
+    const limit = new URL(document.URL).searchParams.get("limit") || 100
+    fetch("/api/stats/images?limit=" + limit)
       .then(res => res.json())
       .then(data => createChart(processChart(data)));
   </script>
