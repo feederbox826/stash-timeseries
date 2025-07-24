@@ -33,7 +33,8 @@ const update = async () => {
 
 // /scenes
 fastify.get("/api/stats/scenes", async (req, rep) => {
-  const rows = db.queryLast100();
+  const limit = req.query.limit ? parseInt(req.query.limit) : 100;
+  const rows = db.queryLast(limit);
   const data = rows.map(row => ({
     timestamp: row.timestamp,
     count: row.scene_count,
@@ -45,7 +46,8 @@ fastify.get("/api/stats/scenes", async (req, rep) => {
 })
 // /images
 fastify.get("/api/stats/images", async (req, rep) => {
-  const rows = db.queryLast100();
+  const limit = req.query.limit ? parseInt(req.query.limit) : 100;
+  const rows = db.queryLast(limist);
   const data = rows.map(row => ({
     timestamp: row.timestamp,
     count: row.image_count,
@@ -56,7 +58,8 @@ fastify.get("/api/stats/images", async (req, rep) => {
 })
 // duration/ o count
 fastify.get("/api/stats/duration", async (req, rep) => {
-  const rows = db.queryLast100();
+  const limit = req.query.limit ? parseInt(req.query.limit) : 100;
+  const rows = db.queryLast(limit);
   const data = rows.map(row => ({
     timestamp: row.timestamp,
     scene_dur: row.scenes_duration,
@@ -69,7 +72,8 @@ fastify.get("/api/stats/duration", async (req, rep) => {
 })
 // other
 fastify.get("/api/stats/other", async (req, rep) => {
-  const rows = db.queryLast100();
+  const limit = req.query.limit ? parseInt(req.query.limit) : 100;
+  const rows = db.queryLast(limist);
   const data = rows.map(row => ({
     timestamp: row.timestamp,
     performers: row.performer_count,

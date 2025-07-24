@@ -26,7 +26,7 @@ export function setup() {
 
 export const queryRange = () => db.prepare("SELECT * FROM timeseries WHERE timestamp >= ? AND timestamp <= ? ORDER BY timestamp DESC").all()
 
-export const queryLast100 = () => db.prepare("SELECT * FROM timeseries ORDER BY timestamp DESC LIMIT 100").all()
+export const queryLast = (limit) => db.prepare("SELECT * FROM timeseries ORDER BY timestamp DESC LIMIT ?").all(limit)
 
 export const queryAll = () => db.prepare("SELECT * FROM timeseries").all()
 
