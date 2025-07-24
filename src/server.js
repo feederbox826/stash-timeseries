@@ -73,7 +73,7 @@ fastify.get("/api/stats/duration", async (req, rep) => {
 // other
 fastify.get("/api/stats/other", async (req, rep) => {
   const limit = req.query.limit ? parseInt(req.query.limit) : 100;
-  const rows = db.queryLast(limist);
+  const rows = db.queryLast(limit);
   const data = rows.map(row => ({
     timestamp: row.timestamp,
     performers: row.performer_count,
