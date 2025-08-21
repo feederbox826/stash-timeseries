@@ -109,6 +109,7 @@ fastify.get("/api/update", async (req, rep) => {
 })
 
 db.setup()
+db.migrate()
 update()
 // run twice daily
 schedule("0 */12 * * *", update)
