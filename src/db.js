@@ -31,13 +31,7 @@ export function setup() {
     value TEXT
   )`).run()
   // check version
-  const row = db.prepare("SELECT value FROM settings WHERE key = 'db_version'").get()
-  let version = 0
-  if (row) {
-    version = parseInt(row.value)
-  } else {
-    db.prepare("INSERT INTO settings (key, value) VALUES ('db_version', '1')").run()
-  }
+  db.prepare("INSERT INTO settings (key, value) VALUES ('db_version', '1')").run()
 }
 
 export function migrate() {
@@ -48,7 +42,7 @@ export function migrate() {
     if (version < 1) {
       // add codecs
       for (const codec of ['h264', 'hevc', 'av1', 'vp9']) {
-        db.prepare(`ALTER TABLE timeseries ADD COLUMN IF NOT EXISTS ${codec}_count INTEGER DEFAULT 0`).run()
+        db.prepare(`ALTER TABLE timeseries ADD COLUMN ${codec}_count INTEGER DEFAULT 0`).run()
       }
       // initial version
       db.prepare("UPDATE settings SET value = '1' WHERE key = 'db_version'").run()

@@ -5,7 +5,9 @@ function processChart(data) {
   const hevc = []
   const av1 = []
   const vp9 = []
-  data.sort((a, b) => a.timestamp - b.timestamp)
+  data
+    .filter(val => val.h264 || val.hevc || val.av1 || val.vp9) // filter out no codec data
+    .sort((a, b) => a.timestamp - b.timestamp)
     .forEach(val => {
       h264.push({ x: val.timestamp, y: val.h264 })
       hevc.push({ x: val.timestamp, y: val.hevc })
