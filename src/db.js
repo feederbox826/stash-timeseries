@@ -31,6 +31,8 @@ export function setup() {
     value TEXT
   )`).run()
   // check version
+  const row = db.prepare("SELECT value FROM settings WHERE key = 'db_version'").get()
+  if (row) return
   db.prepare("INSERT INTO settings (key, value) VALUES ('db_version', '1')").run()
 }
 
