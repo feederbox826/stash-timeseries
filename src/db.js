@@ -20,9 +20,43 @@ export function setup() {
     total_o_count INTEGER,
     total_play_duration INTEGER,
     total_play_count INTEGER,
-    scenes_played INTEGER
+    scenes_played INTEGER,
+    h264_count INTEGER,
+    hevc_count INTEGER,
+    av1_count INTEGER,
+    vp9_count INTEGER
   )`).run()
+  db.prepare(`CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT
+  )`).run()
+  // check version
+  const row = db.prepare("SELECT value FROM settings WHERE key = 'db_version'").get()
+  let version = 0
+  if (row) {
+    version = parseInt(row.value)
+  } else {
+    db.prepare("INSERT INTO settings (key, value) VALUES ('db_version', '1')").run()
+  }
 }
+
+export function migrate() {
+  // v1 migration
+  const row = db.prepare("SELECT value FROM settings WHERE key = 'db_version'").get()
+  if (row) {
+    let version = parseInt(row.value)
+    if (version < 1) {
+      // add codecs
+      for (const codec of ['h264', 'hevc', 'av1', 'vp9']) {
+        db.prepare(`ALTER TABLE timeseries ADD COLUMN IF NOT EXISTS ${codec}_count INTEGER DEFAULT 0`).run()
+      }
+      // initial version
+      db.prepare("UPDATE settings SET value = '1' WHERE key = 'db_version'").run()
+      version = 1
+    }
+  }
+}
+
 
 export const queryRange = () => db.prepare("SELECT * FROM timeseries WHERE timestamp >= ? AND timestamp <= ? ORDER BY timestamp DESC").all()
 
@@ -45,7 +79,11 @@ export const insert = () => db.prepare(`INSERT INTO timeseries (
   total_o_count,
   total_play_duration,
   total_play_count,
-  scenes_played
+  scenes_played,
+  h264_count,
+  hevc_count,
+  av1_count,
+  vp9_count
 ) VALUES (
-  ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
+  ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
 )`)

@@ -1,6 +1,8 @@
 import axios from 'axios';
 import * as https from "https";
 
+const CODECS = ['h264', 'hevc', 'av1', 'vp9'];
+
 const agent = axios.create({
   headers: {
     'Content-Type': 'application/json',
@@ -11,8 +13,9 @@ const agent = axios.create({
   })
 });
 
-export const getStats = async () => {
-  const query = {
+export const getAllStats = async () => {
+  // get all stats and combine them
+  const statsQuery = {
     query: `{ stats {
       scene_count
       scenes_size
@@ -30,5 +33,20 @@ export const getStats = async () => {
       scenes_played
     }}`
   }
-  return agent.post(process.env.STASH_URL, query);
+  const statsResult = await agent.post(process.env.STASH_URL, statsQuery);
+  const data = statsResult.data.data.stats;
+  // get codec stats
+  for (const codec of CODECS) {
+    const codecQuery = {
+      query: `query ($codec: String!) {
+        findScenes(scene_filter: { video_codec: { value: $codec, modifier: EQUALS } }) {
+          count
+        }
+      }`,
+      variables: { codec }
+    };
+    const codecResult = await agent.post(process.env.STASH_URL, codecQuery);
+    data[`${codec}_count`] = codecResult.data.data.findScenes.count;
+  }
+  return data;
 }
